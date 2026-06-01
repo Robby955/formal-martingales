@@ -1,0 +1,10 @@
+# Lake build output and fetched packages
+/.lake/
+.lake/
+build/
+lake-packages/
+*.olean
+lakefile.olean
+
+# macOS
+.DS_Store
