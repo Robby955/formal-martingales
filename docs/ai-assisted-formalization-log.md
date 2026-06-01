@@ -30,3 +30,15 @@ The pattern across entries is the interesting object. If AI handles search and r
 **Outcome.** Around 320 lines, no proof gaps, `#print axioms` reduces to `[propext, Classical.choice, Quot.sound]` on every headline declaration. The result was first prepared as mathlib PR #40085, declined upstream, and relicensed into this library as its first entry.
 
 **Observation for the study.** On a result of this difficulty, AI tools were strong on search and on local tactic suggestions but did not select the theorem, design the statements, or close the genuinely hard proof states without human direction. The measurability obligations and the coercion arithmetic were where suggested tactics most often failed and hand proof took over. That boundary is the thing this log will track as the later, harder results land.
+
+**Theorem.** `ville_inequality` (anytime form), with the finite-horizon `ville_maximal_ineq`, the supporting optional-stopping bound `Supermartingale.expected_stoppedValue_le_start`, and the probability-normalized variants `ville_inequality_of_integral_le_one`, `ville_maximal_ineq_of_integral_le_one`, `ville_maximal_ineq_exists_le`, `ville_maximal_ineq_exists_le_of_integral_le_one`.
+
+**File.** `FormalMartingales/Martingale/Ville.lean` (lines 70–318).
+
+**Notable failure modes.** Suggested tactics most often broke on the measurability side conditions for the hitting time and on the final `ℝ≥0∞` cancellation; those steps were driven by hand. The result first went up as mathlib PR #40085 and was declined upstream before being relicensed here.
+
+**Cross-references.** `MeasureTheory.maximal_ineq` (Doob's submartingale maximal inequality), `MeasureTheory.Submartingale.expected_stoppedValue_mono` (optional-stopping expectation bound), `Supermartingale.neg` (supermartingale to submartingale), `tendsto_measure_iUnion_atTop` (monotone-union measure limit), and the hitting-time API from `Mathlib.Probability.Martingale.OptionalStopping` (`hittingBtwn`, `isStoppingTime_hittingBtwn`, `hittingBtwn_le`, `stoppedValue_hittingBtwn_mem`).
+
+---
+
+Future entries appended chronologically as theorems land — Doob maximal inequality (planned), optional stopping (planned), Azuma–Hoeffding (planned), Freedman (planned).
