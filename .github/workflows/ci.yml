@@ -28,3 +28,7 @@ jobs:
         with:
           build: true
           use-mathlib-cache: true
+
+      # Type-check the downstream-consumption example against the built library.
+      - name: Type-check examples
+        run: lake env lean examples/EProcessTest.lean
