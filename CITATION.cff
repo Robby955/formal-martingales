@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: "If you use this library, please cite it as below."
+title: "formal-martingales: Ville's inequality and anytime-valid martingale tools in Lean 4"
+abstract: >-
+  A Lean 4 library, built on mathlib, formalizing Ville's inequality for
+  nonnegative supermartingales in finite-horizon and anytime forms, with the
+  probability-normalized corollaries used in sequential analysis. The library
+  is the supermartingale and time-uniform companion to mathlib's Doob-side
+  martingale infrastructure, aimed at e-values, e-processes, and confidence
+  sequences.
+type: software
+authors:
+  - family-names: Sneiderman
+    given-names: Rob
+    email: robbysneiderman@gmail.com
+license: Apache-2.0
+repository-code: "https://github.com/Robby955/formal-martingales"
+keywords:
+  - Lean 4
+  - mathlib
+  - martingale
+  - Ville's inequality
+  - anytime-valid inference
+  - sequential analysis
+  - formal mathematics
+references:
+  - type: generic
+    authors:
+      - family-names: Ville
+        given-names: Jean
+    title: "Étude critique de la notion de collectif"
+    publisher:
+      name: Gauthier-Villars
+    year: 1939

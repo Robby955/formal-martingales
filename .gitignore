@@ -3,6 +3,7 @@
 .lake/
 build/
 lake-packages/
+lean-packages/
 *.olean
 lakefile.olean
 
