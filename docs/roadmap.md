@@ -10,9 +10,9 @@ Difficulty scale: `S` small (days), `M` medium (weeks), `L` large (months).
 
 For a nonnegative supermartingale `f` and level `ε > 0`, the probability that `f` ever reaches `ε` is at most `E[f 0] / ε`, uniformly over all time. Finite-horizon and anytime forms, plus the probability-normalized corollaries. Shipped in `FormalMartingales/Martingale/Ville.lean`. Difficulty `M` (complete).
 
-### 2. Doob's maximal inequality — mathlib dependency
+### 2. Doob's maximal inequality — statement skeleton
 
-For a nonnegative submartingale, the running maximum satisfies a matching maximal bound (`MeasureTheory.maximal_ineq`). Already in mathlib; imported here as the dual of Ville and the floor the optional-stopping arguments stand on. Difficulty `S` (reuse).
+For a nonnegative submartingale, the running maximum satisfies a matching maximal bound (`MeasureTheory.maximal_ineq`). The core theorem already lives in mathlib; `FormalMartingales/Martingale/Doob.lean` now records the owned API shape and the probability-normalized downstream forms as statement skeletons. Difficulty `S` (wrap and normalize).
 
 ### 3. Optional stopping — mathlib dependency
 

@@ -26,6 +26,7 @@ See [`docs/ville.md`](docs/ville.md) for the full informal statement and formali
 
 ```
 FormalMartingales.lean                 -- top-level module, re-exports the library
+FormalMartingales/Martingale/Doob.lean  -- Doob maximal inequality API skeleton
 FormalMartingales/Martingale/Ville.lean -- Ville's inequality (finite-horizon + anytime forms)
 docs/                                   -- informal notes, roadmap, formalization log
 ```
@@ -43,14 +44,16 @@ lake build           # build the library
 
 ## Verification
 
-Every headline declaration reduces to mathlib's standard axiom base only:
+The proved Ville declarations reduce to mathlib's standard axiom base only:
 
 ```
 #print axioms FormalMartingales.ville_inequality
 -- [propext, Classical.choice, Quot.sound]
 ```
 
-No project-specific axioms. No proof gaps.
+No project-specific axioms in the proved Ville file. `FormalMartingales/Martingale/Doob.lean`
+is currently a statement skeleton with `sorry` bodies, intended as the next proof target and
+not yet counted as a completed theorem layer.
 
 ## License
 
