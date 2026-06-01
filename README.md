@@ -1,12 +1,19 @@
 # formal-martingales
 
-> Source: Ville's inequality, adapted from PR #40085 (declined upstream; relicensed into this repo). Classical result: Ville (1939).
+[![CI](https://github.com/Robby955/formal-martingales/actions/workflows/ci.yml/badge.svg)](https://github.com/Robby955/formal-martingales/actions/workflows/ci.yml)
+[![Lean](https://img.shields.io/badge/Lean-v4.30.0--rc2-blue.svg)](lean-toolchain)
+[![mathlib](https://img.shields.io/badge/mathlib-25b7ac7-blue.svg)](https://github.com/leanprover-community/mathlib4/tree/25b7ac7d0cf8eef34ced5525f4a62b7613ad649b)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+
+> Source: PR #40085 to mathlib4 (closed without merge per maintainer feedback; the original Lean 4 proof is relicensed Apache 2.0 here). Classical result: Ville (1939).
 > Author: Rob Sneiderman
-> Status: initial
+> Status: Ville's inequality proved; Doob-side API a skeleton; concentration and sequential-testing layers planned.
 
 A Lean 4 library for martingale inequalities, anytime-valid inference, and concentration results. It depends on [mathlib](https://github.com/leanprover-community/mathlib4) and builds the supermartingale and time-uniform side of the theory that downstream statistical work needs.
 
 The library is owned and maintained here rather than upstreamed. It imports mathlib's martingale infrastructure (Doob's maximal inequality, optional stopping, conditional expectation) as a dependency and adds the results that sequential analysis and statistical learning theory call for.
+
+![Proof-chain dependency: mathlib's Doob maximal inequality and optional stopping feed Ville's inequality (proved) and the Doob skeleton, which in turn enable e-values, confidence sequences, and anytime-valid inference.](docs/figures/proof-chain.png)
 
 ## First result: Ville's inequality
 
@@ -22,13 +29,52 @@ The probability-normalized corollary is the shape used in sequential testing: if
 
 See [`docs/ville.md`](docs/ville.md) for the full informal statement and formalization notes, and [`docs/roadmap.md`](docs/roadmap.md) for the planned theorem sequence.
 
+## Status
+
+The repository is honest about what is proved and what is in progress.
+
+- **Proved** (`FormalMartingales/Martingale/Ville.lean`): Ville's inequality in finite-horizon form (`ville_maximal_ineq`) and anytime form (`ville_inequality`), the supporting supermartingale optional-stopping bound (`Supermartingale.expected_stoppedValue_le_start`), and the probability-normalized corollaries (`*_of_integral_le_one`). Every headline declaration reduces to mathlib's standard axiom base only.
+- **Skeleton** (`FormalMartingales/Martingale/Doob.lean`): the owned Doob maximal-inequality API. Statement shapes are fixed; bodies are `sorry`. This is the next proof target, not a completed layer, and it is marked as such.
+- **Planned**: time-uniform Azuma-Hoeffding, Freedman / Bernstein anytime bounds, e-values and e-processes, Howard-Ramdas style confidence sequences, and the time-uniform statistical-learning bounds that bridge to [FormalSLT](https://github.com/Robby955/FormalSLT).
+
+## Background: a mathlib pivot
+
+The Ville proof first went to mathlib4 as PR #40085. The maintainers preferred a different framing for upstream inclusion and closed it without merge. Rather than keep reworking one PR against a moving target, the proof was relicensed under Apache 2.0 and made the first entry of this focused library, where the supermartingale and anytime-valid direction can grow on its own terms. The development record, including where AI tooling helped and where it did not, is in [`docs/ai-assisted-formalization-log.md`](docs/ai-assisted-formalization-log.md).
+
+## Using the library
+
+A downstream development imports `FormalMartingales` and applies the shipped theorem. The worked file [`examples/EProcessTest.lean`](examples/EProcessTest.lean) derives the type-I error guarantee of an e-process sequential test directly from Ville's inequality:
+
+```lean
+import FormalMartingales
+
+open scoped NNReal ENNReal MeasureTheory ProbabilityTheory Topology
+open ProbabilityTheory Finset MeasureTheory
+
+variable {Ω : Type*} {m0 : MeasurableSpace Ω} {μ : Measure Ω}
+  {𝒢 : Filtration ℕ m0} {e : ℕ → Ω → ℝ}
+
+/-- An e-process crosses `α⁻¹` with probability at most `α`, at any stopping rule. -/
+theorem eprocess_sequential_test_typeI
+    [IsFiniteMeasure μ] [SigmaFiniteFiltration μ 𝒢]
+    (hsuper : Supermartingale e 𝒢 μ) (hnonneg : 0 ≤ e)
+    (hstart : μ[e 0] ≤ 1) {α : NNReal} (hα : 0 < α) :
+    μ {ω | ∃ n : ℕ, ((α⁻¹ : NNReal) : ℝ) ≤ e n ω} ≤ (α : ℝ≥0∞) :=
+  ville_inequality_of_integral_le_one hsuper hnonneg hstart hα
+```
+
+Check it against the compiled library with `lake env lean examples/EProcessTest.lean`.
+
 ## Structure
 
 ```
-FormalMartingales.lean                 -- top-level module, re-exports the library
-FormalMartingales/Martingale/Doob.lean  -- Doob maximal inequality API skeleton
-FormalMartingales/Martingale/Ville.lean -- Ville's inequality (finite-horizon + anytime forms)
-docs/                                   -- informal notes, roadmap, formalization log
+FormalMartingales.lean                  -- top-level module, re-exports the library
+FormalMartingales/Martingale/Doob.lean  -- Doob maximal inequality API skeleton (sorry)
+FormalMartingales/Martingale/Ville.lean -- Ville's inequality (finite-horizon + anytime, proved)
+examples/EProcessTest.lean              -- downstream-consumption example
+docs/                                   -- informal notes, roadmap, formalization log, figures
+LICENSE                                 -- Apache 2.0
+CITATION.cff                            -- citation metadata
 ```
 
 All declarations live in the `FormalMartingales` namespace.
@@ -40,7 +86,10 @@ This project pins mathlib to a fixed revision and uses the matching Lean toolcha
 ```bash
 lake exe cache get   # fetch prebuilt mathlib oleans
 lake build           # build the library
+lake env lean examples/EProcessTest.lean   # type-check the example
 ```
+
+CI runs the same steps on every push to `main` and every pull request, on Linux and macOS.
 
 ## Verification
 
@@ -51,9 +100,11 @@ The proved Ville declarations reduce to mathlib's standard axiom base only:
 -- [propext, Classical.choice, Quot.sound]
 ```
 
-No project-specific axioms in the proved Ville file. `FormalMartingales/Martingale/Doob.lean`
-is currently a statement skeleton with `sorry` bodies, intended as the next proof target and
-not yet counted as a completed theorem layer.
+No project-specific axioms in the proved Ville file. `FormalMartingales/Martingale/Doob.lean` is currently a statement skeleton with `sorry` bodies, listed under Status as the next proof target and not counted as a completed theorem layer.
+
+## Citation
+
+Citation metadata is in [`CITATION.cff`](CITATION.cff). GitHub renders a "Cite this repository" prompt from it.
 
 ## License
 

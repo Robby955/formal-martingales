@@ -1,8 +1,8 @@
 # Ville's inequality
 
-> Source: adapted from PR #40085 (declined upstream). Classical result: Ville (1939).
+> Source: PR #40085 to mathlib4 (closed without merge per maintainer feedback; relicensed Apache 2.0 here). Classical result: Ville (1939).
 > Author: Rob Sneiderman
-> Status: initial
+> Status: proved (finite-horizon + anytime forms)
 
 ## Informal statement
 
