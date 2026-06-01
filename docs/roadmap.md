@@ -6,23 +6,25 @@ The library grows along one spine: from the maximal inequality for nonnegative s
 
 Difficulty scale: `S` small (days), `M` medium (weeks), `L` large (months).
 
-### 1. Ville's inequality — done
+![Planned theorem sequence: Ville (done) feeds the Doob skeleton (next) and Doob proved, then time-uniform Azuma-Hoeffding and Freedman/Bernstein, which together with Ville power e-values, confidence sequences, and the FormalSLT bridge.](figures/roadmap.png)
+
+### 1. Ville's inequality: done
 
 For a nonnegative supermartingale `f` and level `ε > 0`, the probability that `f` ever reaches `ε` is at most `E[f 0] / ε`, uniformly over all time. Finite-horizon and anytime forms, plus the probability-normalized corollaries. Shipped in `FormalMartingales/Martingale/Ville.lean`. Difficulty `M` (complete).
 
-### 2. Doob's maximal inequality — statement skeleton
+### 2. Doob's maximal inequality: statement skeleton
 
 For a nonnegative submartingale, the running maximum satisfies a matching maximal bound (`MeasureTheory.maximal_ineq`). The core theorem already lives in mathlib; `FormalMartingales/Martingale/Doob.lean` now records the owned API shape and the probability-normalized downstream forms as statement skeletons. Difficulty `S` (wrap and normalize).
 
-### 3. Optional stopping — mathlib dependency
+### 3. Optional stopping: mathlib dependency
 
 The expected value of a martingale at a bounded stopping time equals its start; the super/sub versions give inequalities. Already in mathlib (`OptionalStopping`). This library adds the missing supermartingale duals it needs, starting with `Supermartingale.expected_stoppedValue_le_start` (shipped) and continuing toward `expected_stoppedValue_anti` and `stoppedProcess`. Difficulty `S` to `M`.
 
-### 4. Azuma-Hoeffding, time-uniform — next
+### 4. Azuma-Hoeffding, time-uniform: next
 
 For a martingale with bounded increments, the deviation of the running sum has a sub-Gaussian tail; composed with Ville, the bound holds at every time at once. The plan routes this through an exponential-supermartingale built from a conditional moment-generating-function hypothesis, then applies Ville to that supermartingale. Difficulty `M`.
 
-### 5. Freedman / Bernstein — major
+### 5. Freedman / Bernstein: major
 
 A time-uniform deviation bound for martingales with bounded increments and controlled predictable variance, sharper than Azuma when the variance is small. The scalar discrete-time case first, stated over the predictable quadratic variation. Difficulty `L`.
 
