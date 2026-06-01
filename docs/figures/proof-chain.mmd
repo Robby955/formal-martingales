@@ -1,0 +1,32 @@
+%% formal-martingales proof-chain dependency
+%% Render: mmdc -i docs/figures/proof-chain.mmd -o docs/figures/proof-chain.png -b white -s 2
+flowchart LR
+    subgraph mathlib["mathlib (dependency floor)"]
+        M1["MeasureTheory.maximal_ineq<br/>Doob maximal inequality"]
+        M2["OptionalStopping<br/>stopped-value bounds, hitting times"]
+    end
+    subgraph lib["formal-martingales (this repo)"]
+        V["Ville's inequality<br/>finite-horizon + anytime<br/>PROVED, axioms clean"]
+        D["Doob maximal, owned API<br/>SKELETON"]
+    end
+    subgraph apps["downstream applications"]
+        A1["e-values / e-processes"]
+        A2["confidence sequences"]
+        A3["anytime-valid inference"]
+    end
+
+    M2 -- proves --> V
+    M1 -. wraps, planned .-> D
+    V -. enables .-> A1
+    V -. enables .-> A2
+    V -. enables .-> A3
+
+    classDef proved fill:#d7f0d8,stroke:#2e7d32,stroke-width:2px,color:#1b1b1b;
+    classDef skeleton fill:#fdeecb,stroke:#e08e0b,stroke-width:2px,color:#1b1b1b;
+    classDef dep fill:#d8e8fb,stroke:#1565c0,stroke-width:2px,color:#1b1b1b;
+    classDef planned fill:#e9ecef,stroke:#6c757d,stroke-width:2px,color:#1b1b1b;
+
+    class V proved;
+    class D skeleton;
+    class M1,M2 dep;
+    class A1,A2,A3 planned;
