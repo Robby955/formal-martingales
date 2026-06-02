@@ -88,6 +88,26 @@ lake env lean examples/EProcessTest.lean   # type-check the example
 
 CI runs the same steps on every push to `main` and every pull request, on Linux and macOS.
 
+## Reproduce
+
+The proved results are pinned to a fixed toolchain and mathlib revision, so a clean checkout
+reproduces the same build and the same axiom footprint.
+
+| Pin | Value |
+| --- | --- |
+| Commit | `7595261e` (this README's `main`) |
+| Lean toolchain | `leanprover/lean4:v4.30.0-rc2` (`lean-toolchain`) |
+| mathlib | `25b7ac7d0cf8` (`lake-manifest.json`) |
+
+```bash
+git clone https://github.com/Robby955/formal-martingales
+cd formal-martingales
+git checkout 7595261e
+lake exe cache get
+lake build
+lake env lean examples/EProcessTest.lean
+```
+
 ## Verification
 
 The local verification commands are recorded in [`docs/verification.md`](docs/verification.md). The proved Ville declarations reduce to mathlib's standard axiom base only:
@@ -113,8 +133,30 @@ The e-process sequential-test API has the same axiom footprint:
 
 ## Citation
 
-Citation metadata is in [`CITATION.cff`](CITATION.cff). GitHub renders a "Cite this repository" prompt from it.
+Citation metadata is in [`CITATION.cff`](CITATION.cff); GitHub renders a "Cite this repository" prompt from it. To cite directly:
+
+```bibtex
+@software{sneiderman_formal_martingales,
+  author  = {Sneiderman, Rob},
+  title    = {{formal-martingales}: Ville's inequality and anytime-valid martingale tools in Lean 4},
+  year     = {2026},
+  url      = {https://github.com/Robby955/formal-martingales},
+  license  = {Apache-2.0}
+}
+```
+
+## Contributing
+
+Issues and pull requests are welcome. New declarations should reduce to mathlib's standard axiom
+base, and CI (`lake build` plus the example type-check) must stay green.
 
 ## License
 
 Apache 2.0. See [`LICENSE`](LICENSE).
+
+## Part of TheoremPath
+
+This library is part of [TheoremPath](https://theorempath.com), a portfolio of machine-checked
+mathematics and statistical-learning work by [Rob Sneiderman](https://robbysneiderman.com). Its
+planned concentration and confidence-sequence results bridge to the sibling
+[FormalSLT](https://github.com/Robby955/FormalSLT) library.
