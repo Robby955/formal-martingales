@@ -19,7 +19,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
 
       # lean-action reads lean-toolchain, installs elan, restores the mathlib
       # olean cache (lake exe cache get), then runs lake build.
