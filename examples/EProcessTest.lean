@@ -10,8 +10,9 @@ import FormalMartingales
 
 This file shows how a downstream development (for instance a sequential-analysis
 layer, or the FormalSLT statistical-learning library) consumes the proved
-martingale bounds from `formal-martingales`. It imports the library and uses the
-shipped theorems directly; nothing here reproves anything.
+martingale bounds from `formal-martingales`. It imports the library, builds an
+`EProcess` from the usual supermartingale hypotheses, and applies the shipped
+testing theorem directly.
 
 An e-process is a nonnegative supermartingale `e` whose starting expectation is
 at most one. The matching level-`α` sequential test rejects the null the first
@@ -42,10 +43,19 @@ every time, so it controls the error of a sequential test that may stop on any
 rule. Proved by applying the library's anytime Ville inequality. -/
 theorem eprocess_sequential_test_typeI
     [IsFiniteMeasure μ] [SigmaFiniteFiltration μ 𝒢]
+    (he : EProcess e 𝒢 μ) {α : NNReal} (hα : 0 < α) :
+    μ {ω | ∃ n : ℕ, ((α⁻¹ : NNReal) : ℝ) ≤ e n ω} ≤ (α : ℝ≥0∞) :=
+  FormalMartingales.eprocess_sequential_test_typeI he hα
+
+/-- The same test-validity statement from the raw supermartingale hypotheses,
+using the owned `EProcess` constructor. -/
+theorem eprocess_sequential_test_typeI_from_components
+    [IsFiniteMeasure μ] [SigmaFiniteFiltration μ 𝒢]
     (hsuper : Supermartingale e 𝒢 μ) (hnonneg : 0 ≤ e)
     (hstart : μ[e 0] ≤ 1) {α : NNReal} (hα : 0 < α) :
-    μ {ω | ∃ n : ℕ, ((α⁻¹ : NNReal) : ℝ) ≤ e n ω} ≤ (α : ℝ≥0∞) :=
-  ville_inequality_of_integral_le_one hsuper hnonneg hstart hα
+    μ {ω | ∃ n : ℕ, ((α⁻¹ : NNReal) : ℝ) ≤ e n ω} ≤ (α : ℝ≥0∞) := by
+  exact eprocess_sequential_test_typeI
+    (EProcess.of_supermartingale hsuper hnonneg hstart) hα
 
 /-- Finite-horizon Doob crossing bound for a nonnegative submartingale whose
 terminal expectation is at most one. -/
@@ -60,6 +70,11 @@ theorem submartingale_finite_horizon_crossing_bound
 -- A quick check that the library surface is what a consumer expects.
 #check @FormalMartingales.ville_inequality
 #check @FormalMartingales.ville_inequality_of_integral_le_one
+#check @FormalMartingales.EValue
+#check @FormalMartingales.EProcess
+#check @FormalMartingales.EProcess.of_supermartingale
+#check @FormalMartingales.EProcess.value_evalue
+#check @FormalMartingales.eprocess_sequential_test_typeI
 #check @FormalMartingales.doob_maximal_ineq_exists_le_of_integral_le_one
 
 end FormalMartingales.Examples

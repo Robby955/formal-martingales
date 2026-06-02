@@ -8,18 +8,20 @@ flowchart LR
     subgraph lib["formal-martingales (this repo)"]
         V["Ville's inequality<br/>finite-horizon + anytime<br/>PROVED, axioms clean"]
         D["Doob finite-horizon API<br/>PROVED, axioms clean"]
+        E["EValue / EProcess API<br/>sequential test validity<br/>PROVED, axioms clean"]
     end
-    A["downstream applications<br/>e-values, confidence sequences,<br/>anytime-valid inference"]
+    A["downstream applications<br/>confidence sequences,<br/>time-uniform concentration"]
 
     M2 -- proves --> V
     M1 -- wraps --> D
-    V -. enables .-> A
+    V -- proves --> E
+    E -. supports .-> A
     D -. supports .-> A
 
     classDef proved fill:#d7f0d8,stroke:#2e7d32,stroke-width:2px,color:#1b1b1b;
     classDef dep fill:#d8e8fb,stroke:#1565c0,stroke-width:2px,color:#1b1b1b;
     classDef planned fill:#e9ecef,stroke:#6c757d,stroke-width:2px,color:#1b1b1b;
 
-    class V,D proved;
+    class V,D,E proved;
     class M1,M2 dep;
     class A planned;

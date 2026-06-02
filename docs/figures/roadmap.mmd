@@ -3,14 +3,13 @@
 flowchart LR
     V["1. Ville<br/>finite-horizon + anytime<br/>M, done"]
     D1["2. Doob maximal<br/>finite-horizon API<br/>S, done"]
-    AZ["3. Azuma-Hoeffding<br/>time-uniform (M)<br/>next"]
-    FB["4. Freedman / Bernstein<br/>anytime (L)"]
-    E["5. e-values /<br/>e-processes (M)"]
+    E["3. e-values /<br/>e-processes API<br/>S, done"]
+    AZ["4. Azuma-Hoeffding<br/>time-uniform (M)<br/>next"]
+    FB["5. Freedman / Bernstein<br/>anytime (L)"]
     CS["6. confidence<br/>sequences (M to L)"]
     SLT["7. SLT bounds<br/>FormalSLT bridge (L)"]
 
-    V --> D1 --> AZ --> FB
-    V -. enables now .-> E
+    V --> D1 --> E --> AZ --> FB
     AZ --> CS
     FB --> CS
     E --> CS --> SLT
@@ -19,6 +18,6 @@ flowchart LR
     classDef next fill:#fdeecb,stroke:#e08e0b,stroke-width:2px,color:#1b1b1b;
     classDef planned fill:#e9ecef,stroke:#6c757d,stroke-width:2px,color:#1b1b1b;
 
-    class V,D1 done;
+    class V,D1,E done;
     class AZ next;
-    class FB,E,CS,SLT planned;
+    class FB,CS,SLT planned;

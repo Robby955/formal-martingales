@@ -7,13 +7,13 @@
 
 > Classical result: Ville (1939). Lean development maintained under Apache 2.0.
 > Author: Rob Sneiderman
-> Status: Ville's inequality proved; finite-horizon Doob maximal API proved; concentration and sequential-testing layers planned.
+> Status: Ville's inequality proved; finite-horizon Doob maximal API proved; e-value/e-process sequential-testing API proved; concentration and confidence-sequence constructions planned.
 
 A Lean 4 library for martingale inequalities, anytime-valid inference, and concentration results. It depends on [mathlib](https://github.com/leanprover-community/mathlib4) and builds the supermartingale and time-uniform side of the theory that downstream statistical work needs.
 
 The library imports mathlib's martingale infrastructure (Doob's maximal inequality, optional stopping, conditional expectation) as a dependency and adds the results that sequential analysis and statistical learning theory call for.
 
-![Proof-chain dependency: mathlib's Doob maximal inequality and optional stopping feed Ville's inequality and the proved finite-horizon Doob API; e-values, confidence sequences, and anytime-valid inference remain planned.](docs/figures/proof-chain.png)
+![Proof-chain dependency: mathlib's Doob maximal inequality and optional stopping feed Ville's inequality, the finite-horizon Doob API, and the proved e-value/e-process API; confidence sequences and concentration applications remain planned.](docs/figures/proof-chain.png)
 
 ## First result: Ville's inequality
 
@@ -27,7 +27,7 @@ In words: the probability that a nonnegative supermartingale ever reaches level 
 
 The probability-normalized corollary is the shape used in sequential testing: if `E[f 0] ≤ 1`, then the event that `f` ever crosses level `α⁻¹` has measure at most `α`. That is the inequality behind e-values, e-processes, and confidence sequences.
 
-See [`docs/ville.md`](docs/ville.md) for the full informal statement and formalization notes, [`docs/verification.md`](docs/verification.md) for the verification commands, and [`docs/roadmap.md`](docs/roadmap.md) for the planned theorem sequence.
+See [`docs/ville.md`](docs/ville.md) for the full informal statement and formalization notes, [`docs/verification.md`](docs/verification.md) for the verification commands, and [`docs/roadmap.md`](docs/roadmap.md) for the theorem roadmap.
 
 ## Status
 
@@ -35,7 +35,8 @@ The repository is honest about what is proved and what is in progress.
 
 - **Proved** (`FormalMartingales/Martingale/Ville.lean`): Ville's inequality in finite-horizon form (`ville_maximal_ineq`) and anytime form (`ville_inequality`), the supporting supermartingale optional-stopping bound (`Supermartingale.expected_stoppedValue_le_start`), and the probability-normalized corollaries (`*_of_integral_le_one`). Every headline declaration reduces to mathlib's standard axiom base only.
 - **Proved** (`FormalMartingales/Martingale/Doob.lean`): the finite-horizon Doob maximal API, including the owned wrapper around mathlib's `MeasureTheory.maximal_ineq`, the terminal-expectation bound, `∃ k ≤ n` crossing forms, and probability-normalized corollaries. These declarations have no project-specific axioms.
-- **Planned**: time-uniform Azuma-Hoeffding, Freedman / Bernstein anytime bounds, e-values and e-processes, Howard-Ramdas style confidence sequences, and the time-uniform statistical-learning bounds that bridge to [FormalSLT](https://github.com/Robby955/FormalSLT).
+- **Proved** (`FormalMartingales/Sequential/EProcess.lean`): the owned `EValue` and `EProcess` API, the deterministic-time result `EProcess.value_evalue`, the constructor `EProcess.of_supermartingale`, and the sequential-test type-I error theorem `eprocess_sequential_test_typeI`.
+- **Planned**: time-uniform Azuma-Hoeffding, Freedman / Bernstein anytime bounds, richer e-process constructions, Howard-Ramdas style confidence sequences, and the time-uniform statistical-learning bounds that bridge to [FormalSLT](https://github.com/Robby955/FormalSLT).
 
 ## Using the library
 
@@ -53,10 +54,9 @@ variable {Ω : Type*} {m0 : MeasurableSpace Ω} {μ : Measure Ω}
 /-- An e-process crosses `α⁻¹` with probability at most `α`, at any stopping rule. -/
 theorem eprocess_sequential_test_typeI
     [IsFiniteMeasure μ] [SigmaFiniteFiltration μ 𝒢]
-    (hsuper : Supermartingale e 𝒢 μ) (hnonneg : 0 ≤ e)
-    (hstart : μ[e 0] ≤ 1) {α : NNReal} (hα : 0 < α) :
+    (he : EProcess e 𝒢 μ) {α : NNReal} (hα : 0 < α) :
     μ {ω | ∃ n : ℕ, ((α⁻¹ : NNReal) : ℝ) ≤ e n ω} ≤ (α : ℝ≥0∞) :=
-  ville_inequality_of_integral_le_one hsuper hnonneg hstart hα
+  FormalMartingales.eprocess_sequential_test_typeI he hα
 ```
 
 Check it against the compiled library with `lake env lean examples/EProcessTest.lean`.
@@ -67,6 +67,7 @@ Check it against the compiled library with `lake env lean examples/EProcessTest.
 FormalMartingales.lean                  -- top-level module, re-exports the library
 FormalMartingales/Martingale/Doob.lean  -- finite-horizon Doob maximal API, proved
 FormalMartingales/Martingale/Ville.lean -- Ville's inequality (finite-horizon + anytime, proved)
+FormalMartingales/Sequential/EProcess.lean -- e-values, e-processes, sequential test API, proved
 examples/EProcessTest.lean              -- downstream-consumption example
 docs/                                   -- informal notes, verification, roadmap, figures
 LICENSE                                 -- Apache 2.0
@@ -100,6 +101,13 @@ The finite-horizon Doob API has the same axiom footprint. For example:
 
 ```
 #print axioms FormalMartingales.doob_maximal_ineq_exists_le_of_integral_le_one
+-- [propext, Classical.choice, Quot.sound]
+```
+
+The e-process sequential-test API has the same axiom footprint:
+
+```
+#print axioms FormalMartingales.eprocess_sequential_test_typeI
 -- [propext, Classical.choice, Quot.sound]
 ```
 
