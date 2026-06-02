@@ -9,10 +9,9 @@ import FormalMartingales
 /-! # Example: an e-process gives a level-`α` sequential test
 
 This file shows how a downstream development (for instance a sequential-analysis
-layer, or the FormalSLT statistical-learning library) consumes Ville's
-inequality from `formal-martingales`. It imports the library and uses the
-shipped theorem `FormalMartingales.ville_inequality_of_integral_le_one`; nothing
-here reproves anything.
+layer, or the FormalSLT statistical-learning library) consumes the proved
+martingale bounds from `formal-martingales`. It imports the library and uses the
+shipped theorems directly; nothing here reproves anything.
 
 An e-process is a nonnegative supermartingale `e` whose starting expectation is
 at most one. The matching level-`α` sequential test rejects the null the first
@@ -34,7 +33,7 @@ open ProbabilityTheory Finset MeasureTheory
 namespace FormalMartingales.Examples
 
 variable {Ω : Type*} {m0 : MeasurableSpace Ω} {μ : Measure Ω}
-  {𝒢 : Filtration ℕ m0} {e : ℕ → Ω → ℝ}
+  {𝒢 : Filtration ℕ m0} {e g : ℕ → Ω → ℝ}
 
 /-- Type-I error of the e-process test. For an e-process `e` (a nonnegative
 supermartingale with `μ[e 0] ≤ 1`) and a level `α ∈ (0, 1]`, the event that `e`
@@ -48,8 +47,19 @@ theorem eprocess_sequential_test_typeI
     μ {ω | ∃ n : ℕ, ((α⁻¹ : NNReal) : ℝ) ≤ e n ω} ≤ (α : ℝ≥0∞) :=
   ville_inequality_of_integral_le_one hsuper hnonneg hstart hα
 
+/-- Finite-horizon Doob crossing bound for a nonnegative submartingale whose
+terminal expectation is at most one. -/
+theorem submartingale_finite_horizon_crossing_bound
+    [IsFiniteMeasure μ]
+    (hsub : Submartingale g 𝒢 μ) (hnonneg : 0 ≤ g) (n : ℕ)
+    (hterminal : μ[g n] ≤ 1) {α : NNReal} (hα : 0 < α) :
+    μ {ω | ∃ k : ℕ, k ≤ n ∧ ((α⁻¹ : NNReal) : ℝ) ≤ g k ω} ≤
+    (α : ℝ≥0∞) :=
+  doob_maximal_ineq_exists_le_of_integral_le_one hsub hnonneg n hterminal hα
+
 -- A quick check that the library surface is what a consumer expects.
 #check @FormalMartingales.ville_inequality
 #check @FormalMartingales.ville_inequality_of_integral_le_one
+#check @FormalMartingales.doob_maximal_ineq_exists_le_of_integral_le_one
 
 end FormalMartingales.Examples

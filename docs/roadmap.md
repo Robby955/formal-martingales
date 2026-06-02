@@ -6,15 +6,15 @@ The library grows along one spine: from the maximal inequality for nonnegative s
 
 Difficulty scale: `S` small (days), `M` medium (weeks), `L` large (months).
 
-![Planned theorem sequence: Ville (done) feeds the Doob skeleton (next) and Doob proved, then time-uniform Azuma-Hoeffding and Freedman/Bernstein, which together with Ville power e-values, confidence sequences, and the FormalSLT bridge.](figures/roadmap.png)
+![Planned theorem sequence: Ville and the finite-horizon Doob API are done, then time-uniform Azuma-Hoeffding and Freedman/Bernstein, which together with Ville power e-values, confidence sequences, and the FormalSLT bridge.](figures/roadmap.png)
 
 ### 1. Ville's inequality: done
 
 For a nonnegative supermartingale `f` and level `ε > 0`, the probability that `f` ever reaches `ε` is at most `E[f 0] / ε`, uniformly over all time. Finite-horizon and anytime forms, plus the probability-normalized corollaries. Shipped in `FormalMartingales/Martingale/Ville.lean`. Difficulty `M` (complete).
 
-### 2. Doob's maximal inequality: statement skeleton
+### 2. Doob's maximal inequality: finite-horizon API done
 
-For a nonnegative submartingale, the running maximum satisfies a matching maximal bound (`MeasureTheory.maximal_ineq`). The core theorem already lives in mathlib; `FormalMartingales/Martingale/Doob.lean` now records the owned API shape and the probability-normalized downstream forms as statement skeletons. Difficulty `S` (wrap and normalize).
+For a nonnegative submartingale, the running maximum satisfies a matching maximal bound (`MeasureTheory.maximal_ineq`). The core theorem already lives in mathlib; `FormalMartingales/Martingale/Doob.lean` wraps it in the owned namespace and proves the terminal-expectation, `∃ k ≤ n`, and probability-normalized finite-horizon forms. Difficulty `S` (complete).
 
 ### 3. Optional stopping: mathlib dependency
 

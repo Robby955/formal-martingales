@@ -41,4 +41,4 @@ The pattern across entries is the interesting object. If AI handles search and r
 
 ---
 
-Future entries appended chronologically as theorems land — Doob maximal inequality (planned), optional stopping (planned), Azuma–Hoeffding (planned), Freedman (planned).
+Future entries appended chronologically as theorem layers land — time-uniform Azuma–Hoeffding (planned), Freedman (planned), e-processes (planned).

@@ -2,15 +2,14 @@
 %% Render: mmdc -i docs/figures/roadmap.mmd -o docs/figures/roadmap.png -b white -s 2
 flowchart LR
     V["1. Ville<br/>finite-horizon + anytime<br/>M, done"]
-    D1["2. Doob maximal<br/>owned API skeleton<br/>S, next"]
-    D2["3. Doob maximal<br/>proved (S)"]
-    AZ["4. Azuma-Hoeffding<br/>time-uniform (M)"]
-    FB["5. Freedman / Bernstein<br/>anytime (L)"]
-    E["6. e-values /<br/>e-processes (M)"]
-    CS["7. confidence<br/>sequences (M to L)"]
-    SLT["8. SLT bounds<br/>FormalSLT bridge (L)"]
+    D1["2. Doob maximal<br/>finite-horizon API<br/>S, done"]
+    AZ["3. Azuma-Hoeffding<br/>time-uniform (M)<br/>next"]
+    FB["4. Freedman / Bernstein<br/>anytime (L)"]
+    E["5. e-values /<br/>e-processes (M)"]
+    CS["6. confidence<br/>sequences (M to L)"]
+    SLT["7. SLT bounds<br/>FormalSLT bridge (L)"]
 
-    V --> D1 --> D2 --> AZ --> FB
+    V --> D1 --> AZ --> FB
     V -. enables now .-> E
     AZ --> CS
     FB --> CS
@@ -20,6 +19,6 @@ flowchart LR
     classDef next fill:#fdeecb,stroke:#e08e0b,stroke-width:2px,color:#1b1b1b;
     classDef planned fill:#e9ecef,stroke:#6c757d,stroke-width:2px,color:#1b1b1b;
 
-    class V done;
-    class D1 next;
-    class D2,AZ,FB,E,CS,SLT planned;
+    class V,D1 done;
+    class AZ next;
+    class FB,E,CS,SLT planned;

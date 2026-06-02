@@ -7,13 +7,13 @@
 
 > Source: PR #40085 to mathlib4 (closed without merge per maintainer feedback; the original Lean 4 proof is relicensed Apache 2.0 here). Classical result: Ville (1939).
 > Author: Rob Sneiderman
-> Status: Ville's inequality proved; Doob-side API a skeleton; concentration and sequential-testing layers planned.
+> Status: Ville's inequality proved; finite-horizon Doob maximal API proved; concentration and sequential-testing layers planned.
 
 A Lean 4 library for martingale inequalities, anytime-valid inference, and concentration results. It depends on [mathlib](https://github.com/leanprover-community/mathlib4) and builds the supermartingale and time-uniform side of the theory that downstream statistical work needs.
 
 The library is owned and maintained here rather than upstreamed. It imports mathlib's martingale infrastructure (Doob's maximal inequality, optional stopping, conditional expectation) as a dependency and adds the results that sequential analysis and statistical learning theory call for.
 
-![Proof-chain dependency: mathlib's Doob maximal inequality and optional stopping feed Ville's inequality (proved) and the Doob skeleton, which in turn enable e-values, confidence sequences, and anytime-valid inference.](docs/figures/proof-chain.png)
+![Proof-chain dependency: mathlib's Doob maximal inequality and optional stopping feed Ville's inequality and the proved finite-horizon Doob API; e-values, confidence sequences, and anytime-valid inference remain planned.](docs/figures/proof-chain.png)
 
 ## First result: Ville's inequality
 
@@ -34,16 +34,16 @@ See [`docs/ville.md`](docs/ville.md) for the full informal statement and formali
 The repository is honest about what is proved and what is in progress.
 
 - **Proved** (`FormalMartingales/Martingale/Ville.lean`): Ville's inequality in finite-horizon form (`ville_maximal_ineq`) and anytime form (`ville_inequality`), the supporting supermartingale optional-stopping bound (`Supermartingale.expected_stoppedValue_le_start`), and the probability-normalized corollaries (`*_of_integral_le_one`). Every headline declaration reduces to mathlib's standard axiom base only.
-- **Skeleton** (`FormalMartingales/Martingale/Doob.lean`): the owned Doob maximal-inequality API. Statement shapes are fixed; bodies are `sorry`. This is the next proof target, not a completed layer, and it is marked as such.
+- **Proved** (`FormalMartingales/Martingale/Doob.lean`): the finite-horizon Doob maximal API, including the owned wrapper around mathlib's `MeasureTheory.maximal_ineq`, the terminal-expectation bound, `∃ k ≤ n` crossing forms, and probability-normalized corollaries. These declarations have no project-specific axioms.
 - **Planned**: time-uniform Azuma-Hoeffding, Freedman / Bernstein anytime bounds, e-values and e-processes, Howard-Ramdas style confidence sequences, and the time-uniform statistical-learning bounds that bridge to [FormalSLT](https://github.com/Robby955/FormalSLT).
 
 ## Background: a mathlib pivot
 
-The Ville proof first went to mathlib4 as PR #40085. The maintainers preferred a different framing for upstream inclusion and closed it without merge. Rather than keep reworking one PR against a moving target, the proof was relicensed under Apache 2.0 and made the first entry of this focused library, where the supermartingale and anytime-valid direction can grow on its own terms. The development record, including where AI tooling helped and where it did not, is in [`docs/ai-assisted-formalization-log.md`](docs/ai-assisted-formalization-log.md).
+The Ville proof first went to mathlib4 as PR #40085. The maintainers preferred a different framing for upstream inclusion and closed it without merge. Rather than keep reworking one PR against a moving target, the proof was relicensed under Apache 2.0 and made the first entry of this focused library, where the supermartingale and anytime-valid direction can grow on its own terms.
 
 ## Using the library
 
-A downstream development imports `FormalMartingales` and applies the shipped theorem. The worked file [`examples/EProcessTest.lean`](examples/EProcessTest.lean) derives the type-I error guarantee of an e-process sequential test directly from Ville's inequality:
+A downstream development imports `FormalMartingales` and applies the shipped theorems. The worked file [`examples/EProcessTest.lean`](examples/EProcessTest.lean) derives the type-I error guarantee of an e-process sequential test from Ville's inequality, and a finite-horizon crossing bound from the Doob API:
 
 ```lean
 import FormalMartingales
@@ -69,7 +69,7 @@ Check it against the compiled library with `lake env lean examples/EProcessTest.
 
 ```
 FormalMartingales.lean                  -- top-level module, re-exports the library
-FormalMartingales/Martingale/Doob.lean  -- Doob maximal inequality API skeleton (sorry)
+FormalMartingales/Martingale/Doob.lean  -- finite-horizon Doob maximal API, proved
 FormalMartingales/Martingale/Ville.lean -- Ville's inequality (finite-horizon + anytime, proved)
 examples/EProcessTest.lean              -- downstream-consumption example
 docs/                                   -- informal notes, roadmap, formalization log, figures
@@ -100,7 +100,12 @@ The proved Ville declarations reduce to mathlib's standard axiom base only:
 -- [propext, Classical.choice, Quot.sound]
 ```
 
-No project-specific axioms in the proved Ville file. `FormalMartingales/Martingale/Doob.lean` is currently a statement skeleton with `sorry` bodies, listed under Status as the next proof target and not counted as a completed theorem layer.
+The finite-horizon Doob API has the same axiom footprint. For example:
+
+```
+#print axioms FormalMartingales.doob_maximal_ineq_exists_le_of_integral_le_one
+-- [propext, Classical.choice, Quot.sound]
+```
 
 ## Citation
 
