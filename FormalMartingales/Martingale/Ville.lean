@@ -2,11 +2,6 @@
 Copyright (c) 2026 Rob Sneiderman. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rob Sneiderman
-
-Adapted from the author's mathlib PR #40085 into this standalone library.
-The statements and proofs are unchanged; only the namespace moves from
-`MeasureTheory` to `FormalMartingales` and the imports use the plain `import`
-form rather than mathlib's module-system `public import`.
 -/
 
 import Mathlib.Probability.Martingale.OptionalStopping

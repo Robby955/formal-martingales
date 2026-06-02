@@ -1,6 +1,6 @@
 # Ville's inequality
 
-> Source: PR #40085 to mathlib4 (closed without merge per maintainer feedback; relicensed Apache 2.0 here). Classical result: Ville (1939).
+> Classical result: Ville (1939). Lean development maintained under Apache 2.0.
 > Author: Rob Sneiderman
 > Status: proved (finite-horizon + anytime forms)
 
