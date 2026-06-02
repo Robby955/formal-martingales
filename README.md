@@ -27,7 +27,7 @@ In words: the probability that a nonnegative supermartingale ever reaches level 
 
 The probability-normalized corollary is the shape used in sequential testing: if `E[f 0] ≤ 1`, then the event that `f` ever crosses level `α⁻¹` has measure at most `α`. That is the inequality behind e-values, e-processes, and confidence sequences.
 
-See [`docs/ville.md`](docs/ville.md) for the full informal statement and formalization notes, and [`docs/roadmap.md`](docs/roadmap.md) for the planned theorem sequence.
+See [`docs/ville.md`](docs/ville.md) for the full informal statement and formalization notes, [`docs/verification.md`](docs/verification.md) for the verification commands, and [`docs/roadmap.md`](docs/roadmap.md) for the planned theorem sequence.
 
 ## Status
 
@@ -68,7 +68,7 @@ FormalMartingales.lean                  -- top-level module, re-exports the libr
 FormalMartingales/Martingale/Doob.lean  -- finite-horizon Doob maximal API, proved
 FormalMartingales/Martingale/Ville.lean -- Ville's inequality (finite-horizon + anytime, proved)
 examples/EProcessTest.lean              -- downstream-consumption example
-docs/                                   -- informal notes, roadmap, figures
+docs/                                   -- informal notes, verification, roadmap, figures
 LICENSE                                 -- Apache 2.0
 CITATION.cff                            -- citation metadata
 ```
@@ -89,7 +89,7 @@ CI runs the same steps on every push to `main` and every pull request, on Linux 
 
 ## Verification
 
-The proved Ville declarations reduce to mathlib's standard axiom base only:
+The local verification commands are recorded in [`docs/verification.md`](docs/verification.md). The proved Ville declarations reduce to mathlib's standard axiom base only:
 
 ```
 #print axioms FormalMartingales.ville_inequality
